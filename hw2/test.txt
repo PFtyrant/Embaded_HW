@@ -1,0 +1,132 @@
+get onion
+use onion
+take knife
+sliced_onion-slice,0
+sliced_onion-slice,1
+get sliced_onion
+return knife
+get onion
+use onion
+take knife
+sliced_onion-slice,0
+sliced_onion-slice,1
+get sliced_onion
+return knife
+use sliced_onion
+use sliced_onion
+take pot
+onion_soup-cook,0
+onion_soup-cook,1
+onion_soup-cook,2
+onion_soup-cook,3
+onion_soup-cook,4
+get onion_soup
+return pot
+bread0
+burger0
+cabbage0
+cooked_meat0
+meat0
+onion0
+onion_soup1
+sliced_cabbage0
+sliced_meat0
+sliced_onion0
+sliced_tomato0
+tomato0
+tomato_soup0
+
+get meat
+use meat
+take knife
+sliced_meat-slice,0
+sliced_meat-slice,1
+get sliced_meat
+return knife
+use sliced_meat
+take pot
+cooked_meat-cook,0
+cooked_meat-cook,1
+cooked_meat-cook,2
+cooked_meat-cook,3
+cooked_meat-cook,4
+get cooked_meat
+return pot
+get cabbage
+use cabbage
+take knife
+sliced_cabbage-slice,0
+sliced_cabbage-slice,1
+get sliced_cabbage
+return knife
+get bread
+get tomato
+use tomato
+take knife
+sliced_tomato-slice,0
+sliced_tomato-slice,1
+get sliced_tomato
+return knife
+use cooked_meat
+use sliced_cabbage
+use bread
+use sliced_tomato
+take none
+burger-compose,0
+burger-compose,1
+burger-compose,2
+get burger
+return none
+bread0
+burger1
+cabbage0
+cooked_meat0
+meat0
+onion0
+onion_soup1
+sliced_cabbage0
+sliced_meat0
+sliced_onion0
+sliced_tomato0
+tomato0
+tomato_soup0
+
+get tomato
+use tomato
+take knife
+sliced_tomato-slice,0
+sliced_tomato-slice,1
+get sliced_tomato
+return knife
+get tomato
+use tomato
+take knife
+sliced_tomato-slice,0
+sliced_tomato-slice,1
+get sliced_tomato
+return knife
+use sliced_tomato
+use sliced_tomato
+take pot
+tomato_soup-cook,0
+tomato_soup-cook,1
+tomato_soup-cook,2
+tomato_soup-cook,3
+tomato_soup-cook,4
+get tomato_soup
+return pot
+bread0
+burger1
+cabbage0
+cooked_meat0
+meat0
+onion0
+onion_soup1
+sliced_cabbage0
+sliced_meat0
+sliced_onion0
+sliced_tomato0
+tomato0
+tomato_soup1
+end
+
