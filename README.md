@@ -1,10 +1,12 @@
 # Embaded_HW
 
 
-Homework based on the game that "overcooked".\n
-HW2 : overcooked\n
-HW3 : multithreading overcooked\n\n(HW2&&Lab5)
+## Homework based on the game that "overcooked".
+1. HW2 : overcooked
+2. HW3 : multithreading overcooked\n\n(HW2&&Lab5)
 
-Lab3:PXA270 function test.\n
-Lab4:zc702 module creation.\n
-Lab5:PXA270 multithreading(use pthread).\n
+
+## Labture
+1. Lab3:PXA270 function test.
+2. Lab4:zc702 module creation.
+3. Lab5:PXA270 multithreading(use pthread).
