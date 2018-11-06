@@ -11,6 +11,7 @@ int main(){
 	me.setOrder(order_file);
 	me.setSteps(steps_file);
 	me.setTool(tools_file);
+	me.openDev();
 	string order = "\0";
 	string product = "\0";
 	order = me.getOrder();
@@ -20,6 +21,8 @@ int main(){
 		if(product == order) {
 			me.getStorage();
 			order = me.getOrder();
+			if(order == "end")
+				break;
 			cout << endl;
 		}
 	}

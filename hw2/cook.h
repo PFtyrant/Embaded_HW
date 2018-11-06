@@ -7,6 +7,9 @@
 #include <sstream>
 #include <map>
 #include <unistd.h>
+#include <sys/fcntl.h>
+#include <sys/ioctl.h>
+#include "asm-arm/arch-pxa/lib/creator_pxa270_lcd.h"
 using namespace std;
 
 class cook {
@@ -121,7 +124,7 @@ class cook {
 		string getOrder(){
 			if(orders.empty()){
 				cout << "end" << endl;
-				return string();
+				return string("end");
 			}
 			string order = orders.back();
 			orders.pop_back();
@@ -150,7 +153,6 @@ class cook {
 		string make(const Step *s){
 			//check material storage
 			map<string,int> check;
-			sleep(1);
 			if(s->material[0] != "none") {
 				for(int i = 0 ; i < s->material.size();i++){
 					check[s->material[i]]++;
@@ -166,33 +168,108 @@ class cook {
 				for(int i = 0 ; i < s->material.size();i++) {
 					cout << "use " << s->material[i] << endl;
 					storage[s->material[i]+'\r']--;
+					getStorage();
+					unsigned short led = LED_ALL_OFF ;
+					ioctl(fds,LED_IOCTL_SET,&led);
+					led = 1;
+					ioctl(fds,LED_IOCTL_BIT_SET,&led);
 				}
 			
 			//take tool
-				cout << "take " << s->tool << endl;
+				if(s->tool != "none"){
+					cout << "take " << s->tool << endl;
+					
+					unsigned short led = LED_ALL_OFF ;
+					ioctl(fds,LED_IOCTL_SET,&led);
+					led = 2;
+					ioctl(fds,LED_IOCTL_BIT_SET,&led);
+					sleep(1);
+				}
 				string str;
 				str = s->product;
 				str.erase(str.find('\r'),1);
+				_7seg_info_t seg;
+
+				ioctl(fds, _7SEG_IOCTL_ON,NULL);
+				seg.Mode = _7SEG_MODE_PATTERN;
+				seg.Which = _7SEG_ALL;
+				seg.Value = 0x00000000;
+				ioctl(fds, _7SEG_IOCTL_SET,&seg);
+    			unsigned long show[5] = {0x3f,0x06,0x5b,0x4f,0x66};
+
 				for(unsigned int i = 0 ; i < s->times;i++){
 					cout << str << "-" << s->action <<","<<i<<endl;
+					seg.Which = 8;
+					seg.Value = show[i];
+					ioctl(fds,_7SEG_IOCTL_SET,&seg);
 					sleep(1);
 				}
+				seg.Which = _7SEG_ALL;
+				seg.Value = 0x00000000;
+				ioctl(fds, _7SEG_IOCTL_SET,&seg);
 				cout << "get " << s->product << endl;
+				unsigned short led = LED_ALL_OFF ;
+				ioctl(fds,LED_IOCTL_SET,&led);
+				led = 0;
+				ioctl(fds,LED_IOCTL_BIT_SET,&led);
+				sleep(1);
 				storage[s->product]++;
-				cout << "return " << s->tool << endl;
+				getStorage();
+
+				if(s->tool != "none"){
+					cout << "return " << s->tool << endl;
+					unsigned short led = LED_ALL_OFF ;
+					ioctl(fds,LED_IOCTL_SET,&led);
+					led = 3;
+					ioctl(fds,LED_IOCTL_BIT_SET,&led);
+					sleep(1);
+				}
 				return  s->product;
 			}
 			else{
 				string str = s->product;
 				cout << "get " << s->product << endl;
 				storage[s->product]++;
+				getStorage();
+				unsigned short led = LED_ALL_OFF ;
+				ioctl(fds,LED_IOCTL_SET,&led);
+				led = 0;
+				ioctl(fds,LED_IOCTL_BIT_SET,&led);
+				sleep(1);
 				return s->product;
 			}
 		}
 		void getStorage(){
+			string lcd_str = "",c="",result="";
+			int i = 0;
+			stringstream ss;
+			
+			lcd_write_info_t display;
+			ioctl(fds,LCD_IOCTL_CLEAR,NULL);
+			sleep(1);
 			for( map<string,int>::iterator iter = storage.begin();iter != storage.end();iter++){
-				cout << iter->first << "\0 " << iter->second << endl;
+				//cout << iter->first << " ";//<< iter->second << endl;
+				lcd_str = iter->first;
+				lcd_str.erase(lcd_str.find('\r'),1);
+				//printf("%s, %d\n",lcd_str.c_str(),iter->second);
+				//result = lcd_str;
+            	display.Count = sprintf((char*) display.Msg,"%s %d",lcd_str.c_str(),iter->second);
+				ioctl(fds, LCD_IOCTL_WRITE,&display);
+
+            	//display.Count = sprintf((char*) display.Msg,"%d\n",iter->second);
 			}
+            //ioctl(fds, LCD_IOCTL_WRITE,&display);
+		}
+
+		void openDev(){
+			int fd;
+			printf ( "Read driver...\n" ) ;
+			if  (( fd= open("/dev/lcd", O_RDWR)) < 0) {
+			printf("Open /dev/lcd faild. \n");
+			exit(-1);
+			}
+			fds = fd;
+	
 		}
 
 	private:
@@ -200,6 +277,7 @@ class cook {
 		map<string, int> storage;
 		map<string, int> tools;
 		int s_size;
+		int fds;
 		vector<string> orders;
 		
 };
