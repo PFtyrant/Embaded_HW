@@ -3,7 +3,7 @@
 
 ## Homework based on the game that "overcooked".
 1. HW2 : overcooked
-2. HW3 : multithreading overcooked\n\n(HW2&&Lab5)
+2. HW3 : multithreading overcooked (HW2&&Lab5)
 
 
 ## Labture
