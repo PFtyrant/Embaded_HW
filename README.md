@@ -1,7 +1,7 @@
 # Embaded_HW
 
 
-## Homework based on the game that "overcooked".
+## Homework based on the game "overcooked".
 1. HW2 : overcooked
 2. HW3 : multithreading overcooked (HW2&&Lab5)
 
