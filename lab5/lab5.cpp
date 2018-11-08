@@ -94,6 +94,7 @@ int main(int argc, char * argv[]) {
             rc = pthread_create(&thread[t],&attr, Order, (void *)t);
         else
             rc = pthread_create(&thread[t],&attr, BusyWork, (void *)t);
+        cout << rc << endl;
         if (rc) {
             printf("ERROR; return code from pthread_create() is %d\n",rc);
             exit(-1);
