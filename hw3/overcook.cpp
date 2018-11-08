@@ -43,6 +43,8 @@ void * workChef(void * t ) {
 		}
 			//chef->getStorage();
 	}
+	
+    pthread_exit(NULL);
 }
 
 void * takeOrder(void * t) {
@@ -50,12 +52,12 @@ void * takeOrder(void * t) {
     while(getline(cin,order)){
 		if(order == "timeout"){
 			flag = false;
-			cout << "Order end" << endl;
 			pthread_exit(NULL);
 		}
 		my_order.push_back(order);
 		order.clear();
     }
+    pthread_exit(NULL);
 }
 
 
@@ -74,8 +76,8 @@ int main(){
 	pthread_attr_init(&attr);
 
 	/*Chef initialization*/
-	cook * chef = new cook[NUM_THREADS-1];
-
+	//cook * chef = new cook[NUM_THREADS-1];
+	cook * chef = new cook;
 	/*Create pthread*/
     cout << "Waiting for open" << endl;
     for( t = 0 ; t < NUM_THREADS; t++) {
@@ -83,10 +85,13 @@ int main(){
         if ( t == 0 )
             rc = pthread_create(&thread[t],&attr, takeOrder, (void *)t);
         else {
-			chef[t-1].setSteps(steps_file);
-			chef[t-1].setTool(tools_file);
-            rc = pthread_create(&thread[t],&attr, workChef, (void *)&chef[t-1]);
-		}
+			//chef[t-1].setSteps(steps_file);
+			//chef[t-1].setTool(tools_file);
+            //rc = pthread_create(&thread[t],&attr, workChef, (void *)&chef[t-1]);
+			chef->setSteps(steps_file);
+			chef->setTool(tools_file);
+            rc = pthread_create(&thread[t],&attr, workChef, (void *)chef);
+			}
 		if (rc) {
             printf("ERROR; return code from pthread_create() is %d\n",rc);
             exit(-1);
@@ -96,13 +101,17 @@ int main(){
 	/*Join*/
     pthread_attr_destroy(&attr);
     for(t=0;t < NUM_THREADS; t++) {
+		if(!flag)
+    		pthread_cancel(thread[t]);
         rc = pthread_join(thread[t],&status);
         if(rc) {
             printf("ERROR; return code from pthread_create() is %d\n",rc);
             exit(-1);
         }
     }
-    pthread_exit(NULL);
+	cout << "end" << endl;
 
-return 0;
+    pthread_exit(NULL);
+	delete(chef);
+	return 0;
 }
