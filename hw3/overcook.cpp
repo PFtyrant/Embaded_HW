@@ -36,7 +36,7 @@ void * workChef(void * t ) {
 			}
 			product = chef->make(chef->find(order));
 			if(product == order) {
-				cout << "Order[" << my_cus << "] : " << product << " Serve!" << endl; 
+				//cout << "Order[" << my_cus << "] : " << product << " Serve!" << endl; 
 				startCook = false;
 				break;
 			}
@@ -79,9 +79,9 @@ int main(){
 	//cook * chef = new cook[NUM_THREADS-1];
 	cook * chef = new cook;
 	/*Create pthread*/
-    cout << "Waiting for open" << endl;
+    //cout << "Waiting for open" << endl;
     for( t = 0 ; t < NUM_THREADS; t++) {
-        cout << "Main: creating : " << t << endl;
+        //cout << "Main: creating : " << t << endl;
         if ( t == 0 )
             rc = pthread_create(&thread[t],&attr, takeOrder, (void *)t);
         else {
@@ -97,7 +97,7 @@ int main(){
             exit(-1);
         }
     }
-	cout << "Open! please order what you want to eat!" << endl;
+	//cout << "Open! please order what you want to eat!" << endl;
 	/*Join*/
     pthread_attr_destroy(&attr);
     for(t=0;t < NUM_THREADS; t++) {
