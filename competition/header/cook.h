@@ -155,59 +155,46 @@ class cook {
 			//check material storage
 			map<string,int> check;
 			if(s->material[0] != "none") {
-				pthread_mutex_lock(&mutex);
 				for(int i = 0 ; i < s->material.size();i++){
 					check[s->material[i]]++;
 				}
-				pthread_mutex_unlock(&mutex);
 				for(int i = 0 ; i < s->material.size();i++) {
 					string product;
 					if(storage[s->material[i]] < check[s->material[i]] ) {
 						product = make(find(s->material[i]));
+						//storage[product]++;
 					}
-					
-					storage[s->material[i]]--;
 				}
-				pthread_mutex_lock(&mutex);
+				
 				for(int i = 0 ; i < s->material.size();i++) {
 					cout << "use " << s->material[i] << endl;
+					storage[s->material[i]]--;
 				}
-				pthread_mutex_unlock(&mutex);
-				//take tool
+			
+			//take tool
 				if(s->tool != "none"){
-					pthread_mutex_lock(&mutex);
-					while( tools[s->tool] == 0 );
-					tools[s->tool]--;
 					cout << "take " << s->tool << endl;
-					pthread_mutex_unlock(&mutex);
 					//sleep(1);
 				}
 
 				for(unsigned int i = 0 ; i < s->times;i++){
-					
-					pthread_mutex_lock(&mutex);
 					cout << s->product << "-" << s->action <<","<<i<<endl;
-					pthread_mutex_unlock(&mutex);
-
 					sleep(1);
 				}
-				pthread_mutex_lock(&mutex);
 				cout << "get " << s->product << endl;
+				//sleep(1);
 				storage[s->product]++;
+
 				if(s->tool != "none"){
-					tools[s->tool]++;
 					cout << "return " << s->tool << endl;
 					//sleep(1);
 				}
-				pthread_mutex_unlock(&mutex);
 				return  s->product;
 			}
 			else{
-				pthread_mutex_lock(&mutex);
 				string str = s->product;
 				cout << "get " << s->product << endl;
 				storage[s->product]++;
-				pthread_mutex_unlock(&mutex);
 				//sleep(1);
 				return s->product;
 			}
@@ -221,16 +208,6 @@ class cook {
 			}
 		}
 
-		void setMutex(pthread_mutex_t & tmutex) {
-			mutex = tmutex;
-		}
-
-		void printToolsleft() {
-			cout << tools["knife"] << ", knife." << endl;
-			cout << tools["pot"] << ", pot." << endl; 
-		}
-
-
 	private:
 		Step *steps;
 		map<string, int> storage;
@@ -238,6 +215,5 @@ class cook {
 		int s_size;
 		int fds;
 		vector<string> orders;
-		pthread_mutex_t mutex;
 		
 };

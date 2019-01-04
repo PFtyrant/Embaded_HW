@@ -64,8 +64,8 @@ void * takeOrder(void * t) {
 int main(){
 
 	//char order_file[] = "source/orders.txt";
-	char steps_file[] = "source/steps.txt";
-	char tools_file[] = "source/tools.txt";
+	char steps_file[] = "steps.txt";
+	char tools_file[] = "tools.txt";
 
 	/*Pthread initialization*/
 	pthread_t thread[NUM_THREADS];
@@ -78,6 +78,7 @@ int main(){
 	/*Chef initialization*/
 	//cook * chef = new cook[NUM_THREADS-1];
 	cook * chef = new cook;
+	chef->setMutex(mutex);
 	/*Create pthread*/
     //cout << "Waiting for open" << endl;
     for( t = 0 ; t < NUM_THREADS; t++) {
@@ -102,7 +103,7 @@ int main(){
     pthread_attr_destroy(&attr);
     for(t=0;t < NUM_THREADS; t++) {
 		if(!flag)
-    		pthread_cancel(thread[t]);
+			pthread_cancel(thread[t]);
         rc = pthread_join(thread[t],&status);
         if(rc) {
             printf("ERROR; return code from pthread_create() is %d\n",rc);
